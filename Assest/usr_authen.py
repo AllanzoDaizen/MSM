@@ -31,7 +31,7 @@ class Usr_Create:
         except Exception as e:
             print(e)
 
-        
+#Testing       
 usr1=Usr_Create("Thanan","123456")
 usr1.usr_pass()
 usr3=Usr_Create("kinin","345345")
