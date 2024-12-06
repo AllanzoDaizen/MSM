@@ -6,6 +6,5 @@ class Create_folder:
             folder_name = f"./Files/{self.username}"
             if not os.path.exists(folder_name):
                 os.mkdir(folder_name)
-                print(f"Folder '{folder_name}' created successfully!")
             else:
-                print(f"Folder '{folder_name}' already exists.")
+                print(f"User '{folder_name}' already exists.")
