@@ -34,17 +34,43 @@ def main(choices):
             else:
                 print("Passwords do not match. Please try again.\n")
                 continue
-    # elif choices == 2:
-        #after login it will be 
+    elif choices == 2:
+        while True:
+            print("-"*36)
+            print("|         Login         |")
+            print("-"*36)
+
+            username = input("Username         : ")
+            usr_pass = input("Password         : ")
+
+            login = usr_authen.Usr_Create(username, usr_pass)
+            if login.usr_login() == True:
+                print("Login successfully!\n")
+                while True:
+                    print("-"*36)
+                    print("|       Operation       |")
+                    print("-"*36)
+                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3.Exit")
+                    secondChoice = int(input("Enter a choice: "))
+                    if secondChoice == 3:
+                        break
+                    elif secondChoice == 1:
+                        print("Loading Message Encrypt and Decrypt!!")
+                        continue
+                if secondChoice == 3:
+                    break
+
+            else:
+                print("Login Failed!")
 
 if __name__ == "__main__":
     while True:
         print("-"*36)
         print("|   MNF Encryption and Decryption   |")
         print("-"*36)
-        print("1. Create Account\n2. Login\n3. Exit")
+        print("1. Create Account\n2. Login\n3. Forget Password\n4. Forget Key\n5. Exit")
         ch = int(input("Enter a choice: "))
-        if ch == 3:
+        if ch == 5:
             break
         else:
             main(ch)
