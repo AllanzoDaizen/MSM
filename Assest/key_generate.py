@@ -13,7 +13,6 @@ class RSAkey:
         key = RSA.generate(2048)
         self.private_key = key.export_key().decode()
         self.public_key = key.publickey().export_key().decode()
-        print("Keys generated!")
         self.save_key()
     
     def save_key(self):
@@ -25,5 +24,4 @@ class RSAkey:
 
         with open(f"{folder_name}/{self.username}public.pem", "w") as public_file:
             public_file.write(self.public_key)
-        print("Keys saved to files.")
 
