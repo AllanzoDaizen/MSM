@@ -4,6 +4,7 @@ from base64 import b64decode, b64encode
 from Assest import key_generate
 from Assest import create_folder
 from Assest import usr_authen
+from Assest import encrypt
 import json
 import hashlib
 
@@ -52,11 +53,48 @@ def main(choices):
                     print("-"*36)
                     print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3.Exit")
                     secondChoice = int(input("Enter a choice: "))
+
                     if secondChoice == 3:
                         break
+
                     elif secondChoice == 1:
-                        print("Loading Message Encrypt and Decrypt!!")
-                        continue
+                        while True:
+                            print("-"*36)
+                            print("|       Message       |")
+                            print("-"*36)
+                            print("1. Encryption\n2. Decryption\n3. Exit")   
+                            thirdChoice = int(input("Enter a choice: "))
+
+                            if thirdChoice == 3:
+                                break
+
+                            elif thirdChoice == 1:
+                                message_encrypt = encrypt.Encryption(username)
+                                message = input("Enter a message: ")
+                                message_encrypt.encrypt_message(message)
+
+                            elif thirdChoice == 2:
+                                # message decrypt block
+                                continue
+                    elif secondChoice == 2:
+                        while True:
+                            print("-"*36)
+                            print("|       File        |")
+                            print("-"*36)
+                            print("1. Encryption\n2. Decryption\n3. Exit")   
+                            thirdChoice = int(input("Enter a choice: "))
+                            if thirdChoice == 3:
+                                break
+                            elif thirdChoice == 1:
+                                file_encrypt = encrypt.Encryption(username)
+                                input_file = input("Enter a file path: ")
+                                print(f"File path: {input_file} encrypted !")
+                                output_file = input("Enter a path to save: ")
+                                file_encrypt.encrypt_file(input_file, output_file)  
+                            elif thirdChoice == 2:
+                                # file decrypt block
+                                continue      
+
                 if secondChoice == 3:
                     break
 
