@@ -35,17 +35,40 @@ class Usr_Create:
             
     def usr_login(self):
         try:
-            data=hashlib.sha256()
-            data.update(self.__usr_passwd.encode("utf-8"))
-            log_passwd=data.hexdigest()
-            try:
-                with open("./Files/usr_pass.json","r") as file:
-                    user=json.load(file)
-                    if self.usr_name in user and log_passwd==user[self.usr_name]:
-                        return(True)
-            except Exception as e:
-                print(e)
+            if len(self.__usr_passwd) == 64:
+                try:
+                    with open("./Files/usr_pass.json","r") as file:
+                        user=json.load(file)
+                        if self.usr_name in user and self.__usr_passwd==user[self.usr_name]:
+                            return(True)
+                except Exception as e:
+                    print(e)  
+            else:
+                data=hashlib.sha256()
+                data.update(self.__usr_passwd.encode("utf-8"))
+                log_passwd=data.hexdigest()
+                try:
+                    with open("./Files/usr_pass.json","r") as file:
+                        user=json.load(file)
+                        if self.usr_name in user and log_passwd==user[self.usr_name]:
+                            return(True)
+                except Exception as e:
+                    print(e)
         except Exception as e:
             print(e)
+            
+class pass_recover:
+    def __init__(self,username):
+        self.username=username
+    def check_for_pass(self):
+        try:
+            with open("./Files/usr_pass.json","r") as file:
+                data=json.load(file)
+                if(self.username in data):
+                    return data[self.username]
+        except Exception as e:
+            print(e)
+
+
 
 
