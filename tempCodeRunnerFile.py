@@ -1,1 +1,0 @@
-elif choices == 2:

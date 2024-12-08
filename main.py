@@ -5,6 +5,7 @@ from Assest import key_generate
 from Assest import create_folder
 from Assest import usr_authen
 from Assest import encrypt
+from Assest import decrypt
 import json
 import hashlib
 
@@ -74,7 +75,9 @@ def main(choices):
                                 message_encrypt.encrypt_message(message)
 
                             elif thirdChoice == 2:
-                                # message decrypt block
+                                message_decrypt = decrypt.Decrypt(username)
+                                encrypted_message = input("Enter the encrypted message: ")
+                                message_decrypt.decrypt_message(encrypted_message)
                                 continue
                     elif secondChoice == 2:
                         while True:
@@ -92,8 +95,17 @@ def main(choices):
                                 output_file = input("Enter a path to save: ")
                                 file_encrypt.encrypt_file(input_file, output_file)  
                             elif thirdChoice == 2:
-                                # file decrypt block
-                                continue      
+                                file_decrypt = decrypt.Decrypt(username)
+                                encrypted_file_path = input("Enter the encrypted file path: ")
+
+                                # Automatically save to the user's folder
+                                decrypted_file_path = file_decrypt.decrypt_file(encrypted_file_path)
+
+                                if decrypted_file_path:
+                                    print(f"Decrypted file saved at: {decrypted_file_path}")
+                                else:
+                                    print("Failed to decrypt the file.")
+                                continue     
 
                 if secondChoice == 3:
                     break
