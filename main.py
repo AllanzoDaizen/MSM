@@ -7,6 +7,46 @@ from Assest import usr_authen
 from Assest import encrypt
 import json
 import hashlib
+import socket
+import threading
+
+# def listen(client_socket):
+#     try:
+#         while True:
+#             request=client_socket.recv(1024)
+#             request=request.decode("utf-8")
+#             if request == "exit":
+#                 break
+#             print(f"\nrecived mes: {request}")
+#         client_socket.close()
+        
+#     except Exception as e:
+#         print(e)
+    
+# def send_mes(peer):
+#     try:
+#         while True:
+#             mes=input("\nenter message: ")
+#             new_mes=mes.encode('utf-8')
+#             if mes == "exit":
+#                 break
+#             peer.send(new_mes)
+#         peer.close()
+        
+#     except Exception as e: 
+#         print(e)
+        
+# def peer():
+#     try:
+#         peer=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+#         peer.connect(("localhost",2000))
+        
+        
+#         threading.Thread(target=listen,args=(peer,)).start()
+#         threading.Thread(target=send_mes,args=(peer,)).start()
+#     except Exception as e:
+#         print(e)
+        
 
 def main(choices):
     if choices == 1:
@@ -71,7 +111,8 @@ def main(choices):
                             elif thirdChoice == 1:
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
-                                message_encrypt.encrypt_message(message)
+                                a=message_encrypt.encrypt_message(message)
+                                print("mes: ",a)
 
                             elif thirdChoice == 2:
                                 # message decrypt block

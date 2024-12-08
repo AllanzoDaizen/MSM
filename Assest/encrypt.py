@@ -24,7 +24,7 @@ class Encryption:
             )
 
             # Encode the encrypted message as Base64 for easier storage/display
-            print(b64encode(encrypted_message).decode())
+            return b64encode(encrypted_message).decode()
 
         except Exception as e:
             print(f"Error encrypting message: {e}")
