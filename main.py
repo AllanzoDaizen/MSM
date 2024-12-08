@@ -1,53 +1,13 @@
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from base64 import b64decode, b64encode
-from Assest import key_generate
-from Assest import create_folder
-from Assest import usr_authen
-from Assest import encrypt
+from Code import encrypt, decrypt, usr_authen, key_generate, create_folder
 import json
 import hashlib
 import socket
 import threading
 
-# def listen(client_socket):
-#     try:
-#         while True:
-#             request=client_socket.recv(1024)
-#             request=request.decode("utf-8")
-#             if request == "exit":
-#                 break
-#             print(f"\nrecived mes: {request}")
-#         client_socket.close()
         
-#     except Exception as e:
-#         print(e)
-    
-# def send_mes(peer):
-#     try:
-#         while True:
-#             mes=input("\nenter message: ")
-#             new_mes=mes.encode('utf-8')
-#             if mes == "exit":
-#                 break
-#             peer.send(new_mes)
-#         peer.close()
-        
-#     except Exception as e: 
-#         print(e)
-        
-# def peer():
-#     try:
-#         peer=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#         peer.connect(("localhost",2000))
-        
-        
-#         threading.Thread(target=listen,args=(peer,)).start()
-#         threading.Thread(target=send_mes,args=(peer,)).start()
-#     except Exception as e:
-#         print(e)
-        
-
 def main(choices):
     if choices == 1:
         while True:
@@ -91,7 +51,7 @@ def main(choices):
                     print("-"*36)
                     print("|       Operation       |")
                     print("-"*36)
-                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3.Exit")
+                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3. Exit")
                     secondChoice = int(input("Enter a choice: "))
 
                     if secondChoice == 3:
@@ -112,11 +72,13 @@ def main(choices):
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
                                 a=message_encrypt.encrypt_message(message)
-                                print("mes: ",a)
+                                
 
                             elif thirdChoice == 2:
-                                # message decrypt block
-                                continue
+                                message_decrypt = decrypt.Decryption(username)
+                                message = input("Enter a message: ")
+                                message_decrypt.decrypt_message(message)
+                                
                     elif secondChoice == 2:
                         while True:
                             print("-"*36)
@@ -131,10 +93,14 @@ def main(choices):
                                 input_file = input("Enter a file path: ")
                                 print(f"File path: {input_file} encrypted !")
                                 output_file = input("Enter a path to save: ")
-                                file_encrypt.encrypt_file(input_file, output_file)  
+                                file_encrypt.encrypt_file(input_file, output_file) 
+
                             elif thirdChoice == 2:
-                                # file decrypt block
-                                continue      
+                                file_decrypt = decrypt.Decryption(username)
+                                input_file = input("Enter a file path: ")
+                                print(f"File path: {input_file} decrypted !")
+                                output_file = input("Enter a path to save: ")
+                                file_decrypt.decrypt_file(input_file, output_file) 
 
                 if secondChoice == 3:
                     break
