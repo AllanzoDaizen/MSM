@@ -109,7 +109,7 @@ if __name__ == "__main__":
         print("-"*36)
         print("|   MNF Encryption and Decryption   |")
         print("-"*36)
-        print("1. Create Account\n2. Login\n3. Forget Password\n4. Forget Key\n5. Exit")
+        print("1. Create Account\n2. Login\n3. Forget Password\n5. Exit")
         ch = int(input("Enter a choice: "))
         if ch == 5:
             break
