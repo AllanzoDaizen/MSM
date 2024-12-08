@@ -5,8 +5,8 @@ from Assest import key_generate
 from Assest import create_folder
 from Assest import usr_authen
 from Assest import encrypt
-import json
-import hashlib
+from Assest import decrypt
+
 
 def main(choices):
     if choices == 1:
@@ -74,8 +74,10 @@ def main(choices):
                                 message_encrypt.encrypt_message(message)
 
                             elif thirdChoice == 2:
-                                # message decrypt block
-                                continue
+                                message_decrypt = decrypt.Decryption(username)
+                                message = input("Enter a message: ")
+                                message_decrypt.decrypt_message(message)        
+
                     elif secondChoice == 2:
                         while True:
                             print("-"*36)
@@ -85,15 +87,20 @@ def main(choices):
                             thirdChoice = int(input("Enter a choice: "))
                             if thirdChoice == 3:
                                 break
+
                             elif thirdChoice == 1:
                                 file_encrypt = encrypt.Encryption(username)
                                 input_file = input("Enter a file path: ")
                                 print(f"File path: {input_file} encrypted !")
                                 output_file = input("Enter a path to save: ")
-                                file_encrypt.encrypt_file(input_file, output_file)  
+                                file_encrypt.encrypt_file(input_file, output_file) 
+
                             elif thirdChoice == 2:
-                                # file decrypt block
-                                continue      
+                                file_decrypt = decrypt.Decryption(username)
+                                input_file = input("Enter a file path: ")
+                                print(f"File path: {input_file} decrypted !") 
+                                output_file = input("Enter a path to save: ") 
+                                file_decrypt.decrypt_file(input_file, output_file)    
 
                 if secondChoice == 3:
                     break
