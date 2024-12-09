@@ -1,203 +1,224 @@
-import tkinter as tk
 import customtkinter as ctk
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
-from base64 import b64decode, b64encode
-from Code import encrypt, decrypt, usr_authen, key_generate, create_folder  # Import your operations
+from tkinter import filedialog, messagebox
+from Code import usr_authen, create_folder, key_generate, encrypt, decrypt
+from tkinter import PhotoImage
+from PIL import Image, ImageTk
 
-# Global label variables
-error_label = None
-success_label = None
+class MNFApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("MNF Encryption & Decryption")
+        self.root.geometry("900x700")
+        self.username = None
 
-# Function to create an account
-def create_account():
-    global error_label, success_label  # Reference the global variables
+        # Stack to track page history
+        self.page_history = []
 
-    username = username_entry.get()
-    password = password_entry.get()
-    confirm_password = confirm_password_entry.get()
+        # Set the theme
+        ctk.set_appearance_mode("dark")  # Dark mode for modern feel
+        ctk.set_default_color_theme("green")  # Military green color theme
 
-    # Ensure error_label is created
-    if not error_label:  # If the error label is not initialized
-        error_label = ctk.CTkLabel(root, text="", text_color="red")
-    
-    # Clear any previous error messages
-    error_label.configure(text="")
-    success_label.configure(text="") if success_label else None
+        # Set the background color to a military mix (olive green, brown)
+        self.set_background()
 
-    # If passwords do not match
-    if password != confirm_password:
-        error_label.configure(text="Passwords do not match. Please try again.")
-        error_label.pack(pady=10)
-        return
+        # Create buttons for the main menu
+        self.create_main_menu()
 
-    # Simulate account creation (you can add actual validation and creation logic here)
-    if username and password:  # Add your validation logic here
-        # Create folder and generate keys
-        CreateFd = create_folder.Create_folder(username)
-        CreateFd.create_folder()
+    def set_background(self):
+        # Setting a military-style color gradient (green and brown mix)
+        self.root.configure(bg="#2F4F4F")  # Main background color
 
-        KeyGenerate = key_generate.RSAkey(username)
-        KeyGenerate.generate_key()
-        KeyGenerate.save_key()
+        # For the frame color, use a camo brown tone
+        frame_color = "#4F6D4F"
+        self.root.configure(bg=frame_color)
 
-        # Create a success message
-        if not success_label:
-            success_label = ctk.CTkLabel(root, text="Account created successfully!", text_color="green")
-        success_label.pack(pady=10)
+    def create_main_menu(self):
+        # Add the logo at the start page
+        self.add_logo()
+
+        ctk.CTkLabel(self.root, text="MNF Encryption and Decryption Tool", font=("Arial", 30), text_color="white").pack(pady=30)
+
+        # Create larger buttons with a military color theme
+        ctk.CTkButton(self.root, text="Create Account", width=300, height=60, font=("Arial", 18), command=self.create_account, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Login", width=300, height=60, font=("Arial", 18), command=self.login, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Exit", width=300, height=60, font=("Arial", 18), command=self.root.quit, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+
+    def add_logo(self):
+        try:
+            # Load the image using PIL
+            img = Image.open("Military.png")
+            img = img.resize((200, 200))  # Resize to the desired dimensions
+            
+            # Convert the image to a format compatible with customtkinter
+            self.logo = ImageTk.PhotoImage(img)
+            
+            # Create a label and set the image
+            logo_label = ctk.CTkLabel(self.root, image=self.logo)
+            logo_label.pack(pady=20)
+        except Exception as e:
+            print(f"Error loading logo: {e}")
+
+    def create_account(self):
+        self.clear_screen()
+        self.page_history.append(self.create_main_menu)
+
+        ctk.CTkLabel(self.root, text="Create Account", font=("Arial", 30), text_color="white").pack(pady=30)
+
+        # Create large input fields
+        username_label = ctk.CTkLabel(self.root, text="Username:", font=("Arial", 18), text_color="white")
+        username_label.pack()
+        username_entry = ctk.CTkEntry(self.root, font=("Arial", 18), width=300)
+        username_entry.pack(pady=10)
+
+        password_label = ctk.CTkLabel(self.root, text="Password:", font=("Arial", 18), text_color="white")
+        password_label.pack()
+        password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*", width=300)
+        password_entry.pack(pady=10)
+
+        confirm_password_label = ctk.CTkLabel(self.root, text="Confirm Password:", font=("Arial", 18), text_color="white")
+        confirm_password_label.pack()
+        confirm_password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*", width=300)
+        confirm_password_entry.pack(pady=10)
+
+        def create_account_action():
+            username = username_entry.get()
+            password = password_entry.get()
+            confirm_password = confirm_password_entry.get()
+
+            if password != confirm_password:
+                messagebox.showerror("Error", "Passwords do not match!")
+                return
+
+            authen = usr_authen.Usr_Create(username, password)
+            if authen.usr_pass() == False:
+                messagebox.showerror("Error", "Username already exists!")
+            else:
+                CreateFd = create_folder.Create_folder(username)
+                CreateFd.create_folder()
+                KeyGenerate = key_generate.RSAkey(username)
+                KeyGenerate.generate_key()
+                KeyGenerate.save_key()
+                messagebox.showinfo("Success", "Account created successfully!")
+                self.clear_screen()
+                self.create_main_menu()
+
+        ctk.CTkButton(self.root, text="Create Account", font=("Arial", 18), command=create_account_action, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=30)
         
-        # Optionally, clear the input fields
-        username_entry.delete(0, tk.END)
-        password_entry.delete(0, tk.END)
-        confirm_password_entry.delete(0, tk.END)
-    else:
-        error_label.configure(text="Account creation failed. Try again.")
-        error_label.pack(pady=10)
+        # Add back button to return to previous page
+        self.create_back_button()
 
-# Function to show the main menu
-def main_menu():
-    clear_frame()
-    
-    title_label = ctk.CTkLabel(root, text="MNF Encryption and Decryption", font=("Arial", 20, "bold"), text_color="#2d3e50")
-    title_label.pack(pady=20)
+    def login(self):
+        self.clear_screen()
+        self.page_history.append(self.create_main_menu)
 
-    # Create Account Button
-    sign_up_button = ctk.CTkButton(root, text="Sign Up", command=show_sign_up, width=200, height=40)
-    sign_up_button.pack(pady=10)
+        ctk.CTkLabel(self.root, text="Login", font=("Arial", 30), text_color="white").pack(pady=30)
 
-    # Login Button
-    login_button = ctk.CTkButton(root, text="Login", command=show_login, width=200, height=40)
-    login_button.pack(pady=10)
+        username_label = ctk.CTkLabel(self.root, text="Username:", font=("Arial", 18), text_color="white")
+        username_label.pack()
+        username_entry = ctk.CTkEntry(self.root, font=("Arial", 18), width=300)
+        username_entry.pack(pady=10)
 
-    # Forget Password Button
-    forget_password_button = ctk.CTkButton(root, text="Forgot Password", command=show_forget_password, width=200, height=40)
-    forget_password_button.pack(pady=10)
+        password_label = ctk.CTkLabel(self.root, text="Password:", font=("Arial", 18), text_color="white")
+        password_label.pack()
+        password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*", width=300)
+        password_entry.pack(pady=10)
 
-    # Exit Button
-    exit_button = ctk.CTkButton(root, text="Exit", command=root.quit, fg_color="red", hover_color="#cc0000", width=200, height=40)
-    exit_button.pack(pady=10)
+        def login_action():
+            username = username_entry.get()
+            password = password_entry.get()
 
-# Function to clear the current frame
-def clear_frame():
-    for widget in root.winfo_children():
-        widget.destroy()
+            login = usr_authen.Usr_Create(username, password)
+            if login.usr_login():
+                self.username = username
+                messagebox.showinfo("Success", "Login successful!")
+                self.show_operations_menu()
+            else:
+                messagebox.showerror("Error", "Login failed!")
 
-# Show Sign Up screen
-def show_sign_up():
-    clear_frame()
+        ctk.CTkButton(self.root, text="Login", font=("Arial", 18), command=login_action, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=30)
 
-    # Sign Up Title
-    sign_up_title_label = ctk.CTkLabel(root, text="Create Account", font=("Arial", 20, "bold"), text_color="#2d3e50")
-    sign_up_title_label.pack(pady=20)
+        # Add back button to return to previous page
+        self.create_back_button()
 
-    # Username and Password Fields
-    username_label = ctk.CTkLabel(root, text="Username:")
-    username_label.pack(pady=5)
-    global username_entry
-    username_entry = ctk.CTkEntry(root, width=200)
-    username_entry.pack(pady=5)
+    def show_operations_menu(self):
+        self.clear_screen()
+        self.page_history.append(self.create_main_menu)
+        ctk.CTkLabel(self.root, text=f"Welcome, {self.username}", font=("Arial", 30), text_color="white").pack(pady=30)
 
-    password_label = ctk.CTkLabel(root, text="Password:")
-    password_label.pack(pady=5)
-    global password_entry
-    password_entry = ctk.CTkEntry(root, width=200, show="*")
-    password_entry.pack(pady=5)
+        ctk.CTkButton(self.root, text="Message Encryption/Decryption", font=("Arial", 18), width=300, height=60, command=self.message_operations, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="File Encryption/Decryption", font=("Arial", 18), width=300, height=60, command=self.file_operations, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Logout", font=("Arial", 18), width=300, height=60, command=self.logout, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
 
-    confirm_password_label = ctk.CTkLabel(root, text="Confirm Password:")
-    confirm_password_label.pack(pady=5)
-    global confirm_password_entry
-    confirm_password_entry = ctk.CTkEntry(root, width=200, show="*")
-    confirm_password_entry.pack(pady=5)
+        # Add back button to return to previous page
+        self.create_back_button()
 
-    # Create Account Button
-    create_account_button = ctk.CTkButton(root, text="Create Account", command=create_account, width=200, height=40)
-    create_account_button.pack(pady=10)
+    def message_operations(self):
+        self.clear_screen()
+        self.page_history.append(self.show_operations_menu)
 
-    # Back Button
-    back_button = ctk.CTkButton(root, text="Back", command=main_menu, width=200, height=40)
-    back_button.pack(pady=10)
+        ctk.CTkLabel(self.root, text="Message Operations", font=("Arial", 30), text_color="white").pack(pady=30)
 
-# Show Login screen
-def show_login():
-    clear_frame()
+        def encrypt_message():
+            message = message_entry.get()
+            encryption = encrypt.Encryption(self.username)
+            encryption.encrypt_message(message)
 
-    # Login Title
-    login_title_label = ctk.CTkLabel(root, text="Login", font=("Arial", 20, "bold"), text_color="#2d3e50")
-    login_title_label.pack(pady=20)
+        def decrypt_message():
+            message = message_entry.get()
+            decryption = decrypt.Decryption(self.username)
+            decryption.decrypt_message(message)
 
-    # Username and Password Fields
-    login_username_label = ctk.CTkLabel(root, text="Username:")
-    login_username_label.pack(pady=5)
-    global login_username_entry
-    login_username_entry = ctk.CTkEntry(root, width=200)
-    login_username_entry.pack(pady=5)
+        ctk.CTkLabel(self.root, text="Enter Message:", font=("Arial", 18), text_color="white").pack(pady=10)
+        message_entry = ctk.CTkEntry(self.root, font=("Arial", 18), width=300)
+        message_entry.pack(pady=10)
 
-    login_password_label = ctk.CTkLabel(root, text="Password:")
-    login_password_label.pack(pady=5)
-    global login_password_entry
-    login_password_entry = ctk.CTkEntry(root, width=200, show="*")
-    login_password_entry.pack(pady=5)
+        ctk.CTkButton(self.root, text="Encrypt Message", font=("Arial", 18), command=encrypt_message, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Decrypt Message", font=("Arial", 18), command=decrypt_message, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
 
-    # Login Button
-    login_button = ctk.CTkButton(root, text="Login", command=login, width=200, height=40)
-    login_button.pack(pady=10)
+        # Add back button to return to previous page
+        self.create_back_button()
 
-    # Back Button
-    back_button = ctk.CTkButton(root, text="Back", command=main_menu, width=200, height=40)
-    back_button.pack(pady=10)
+    def file_operations(self):
+        self.clear_screen()
+        self.page_history.append(self.show_operations_menu)
 
-# Function to handle login
-def login():
-    username = login_username_entry.get()
-    password = login_password_entry.get()
+        ctk.CTkLabel(self.root, text="File Operations", font=("Arial", 30), text_color="white").pack(pady=30)
 
-    # Authenticate user with your usr_authen
-    login_auth = usr_authen.Usr_Create(username, password)
+        def encrypt_file():
+            file_path = filedialog.askopenfilename()
+            encryption = encrypt.Encryption(self.username)
+            encryption.encrypt_file(file_path)
 
-    if login_auth.usr_login():
-        success_label = ctk.CTkLabel(root, text="Login successful!", text_color="green")
-        success_label.pack(pady=10)
-    else:
-        error_label = ctk.CTkLabel(root, text="Login failed. Try again.", text_color="red")
-        error_label.pack(pady=10)
+        def decrypt_file():
+            file_path = filedialog.askopenfilename()
+            decryption = decrypt.Decryption(self.username)
+            decryption.decrypt_file(file_path)
 
-# Function to handle forget password
-def show_forget_password():
-    clear_frame()
+        ctk.CTkButton(self.root, text="Encrypt File", font=("Arial", 18), command=encrypt_file, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Decrypt File", font=("Arial", 18), command=decrypt_file, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
 
-    # Forget Password Title
-    forget_password_title_label = ctk.CTkLabel(root, text="Forget Password", font=("Arial", 20, "bold"), text_color="#2d3e50")
-    forget_password_title_label.pack(pady=20)
+        # Add back button to return to previous page
+        self.create_back_button()
 
-    # Username Field
-    forget_password_username_label = ctk.CTkLabel(root, text="Enter your username:")
-    forget_password_username_label.pack(pady=5)
-    global forget_password_username_entry
-    forget_password_username_entry = ctk.CTkEntry(root, width=200)
-    forget_password_username_entry.pack(pady=5)
+    def create_back_button(self):
+        ctk.CTkButton(self.root, text="Back", font=("Arial", 18), command=self.go_back, fg_color="#4F6D4F", hover_color="#556B2F").place(x=30, y=30)
 
-    # Reset Password Button
-    reset_password_button = ctk.CTkButton(root, text="Reset Password", command=forget_password, width=200, height=40)
-    reset_password_button.pack(pady=10)
+    def go_back(self):
+        if self.page_history:
+            self.clear_screen()
+            previous_page = self.page_history.pop()
+            previous_page()
 
-    # Back Button
-    back_button = ctk.CTkButton(root, text="Back", command=main_menu, width=200, height=40)
-    back_button.pack(pady=10)
+    def clear_screen(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
 
-# Simulate forget password functionality
-def forget_password():
-    print("Forget password functionality coming soon!")
-    main_menu()  # Return to main menu after forget password
+    def logout(self):
+        self.username = None
+        self.clear_screen()
+        self.create_main_menu()
 
-# Run the application
-root = ctk.CTk()
-root.title("MNF Encryption and Decryption")
-root.geometry("500x600")  # Set window size (adjust as needed)
-
-# Set theme for customtkinter
-ctk.set_appearance_mode("light")
-ctk.set_default_color_theme("blue")
-
-main_menu()  # Show the main menu initially
-
-root.mainloop()
+if __name__ == "__main__":
+    root = ctk.CTk()
+    app = MNFApp(root)
+    root.mainloop()
