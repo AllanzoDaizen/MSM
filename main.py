@@ -111,15 +111,15 @@ def main(choices):
             print("-"*36)
             username = input("Username: ")
             email = input("Email: ")
-            recovery = usr_authen.pass_recover(username, email, usr_newpass = None)
-            if recovery.check_email == True:
+            recovery = usr_authen.pass_recover()
+            if recovery.check_email(username, email) == True:
                 usr_newpass = input("New password:")
                 usr_confirm_new_pass = input("Confirm new password: ")
                 if usr_newpass == usr_confirm_new_pass:
-                    recovery = usr_authen.pass_recover(username, email, usr_newpass)
-                    recovery.check_for_pass()
-                    if recovery.check_for_pass() == True:
+                    
+                    if recovery.change_pass(username, usr_newpass) == True:
                         print("Password changed successfully!")
+                        break
                     else:
                         print("Password cannot change! Try again!")
             
