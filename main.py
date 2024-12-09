@@ -72,6 +72,7 @@ def main(choices):
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
                                 a=message_encrypt.encrypt_message(message)
+                                print(a)
                                 
 
                             elif thirdChoice == 2:
@@ -113,9 +114,9 @@ if __name__ == "__main__":
         print("-"*36)
         print("|   MNF Encryption and Decryption   |")
         print("-"*36)
-        print("1. Create Account\n2. Login\n3. Forget Password\n5. Exit")
+        print("1. Create Account\n2. Login\n3. Forget Password\n4. Exit")
         ch = int(input("Enter a choice: "))
-        if ch == 5:
+        if ch == 4:
             break
         else:
             main(ch)
