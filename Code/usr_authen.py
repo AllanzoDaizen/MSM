@@ -82,32 +82,30 @@ class Usr_Create:
             print(e)
             
 class pass_recover:
-    def __init__(self,username,new_passwd,email):
-        self.username=username
-        self.__new_passwd=new_passwd
-        self.email=email
-    def check_for_pass(self):
+    def check_email(self,username,email):
         try:
             with open("./Files/usr_pass.json","r") as file:
                 data=json.load(file)
-                if(self.username in data):
+                if(username in data):
                     with open("./Files/usr_email.json","r") as f:
                         us_em=json.load(f)
-                        if(self.email == us_em[self.username]):
-                            passwd = hashlib.sha256()
-                            passwd.update(self.__new_passwd.encode("utf-8"))
-                            hashed_pass=passwd.hexdigest()
-                            data[self.username]=hashed_pass
-                            with open("./Files/usr_pass.json","w") as f:
-                                json.dump(data,f,indent=4)
+                        if(email == us_em[username]):
                             return True
-                        else:
-                            return False 
-                else:
-                    return False
-
+        except Exception as e:
+            print(e)
+    def change_pass(self,username,new_passwd):
+        try:
+                with open("./Files/usr_pass.json","r") as file:
+                    data=json.load(file)
+                    passwd = hashlib.sha256()
+                    passwd.update(new_passwd.encode("utf-8"))
+                    hashed_pass=passwd.hexdigest()
+                    data[username]=hashed_pass
+                    with open("./Files/usr_pass.json","w") as f:
+                        json.dump(data,f,indent=4)
+                    return True
         except Exception as e:
             print(e)
         
 
-
+    
