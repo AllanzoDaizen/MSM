@@ -6,9 +6,10 @@ class Usr_Create:
         self.usr_name=usr_name
         self.__usr_passwd=usr_passwd
         self.email=email
-        
+    # Adding username and password of user   
     def usr_pass(self):
         try:
+            # hashing the password
             data = hashlib.sha256()
             data.update(self.__usr_passwd.encode("utf-8"))
             hashed_pass=data.hexdigest()
@@ -33,7 +34,7 @@ class Usr_Create:
                  
         except Exception as e:
             print(e)
-        
+        # adding user's emial to check new password
         try:
             usr_email_dict={self.usr_name:self.email}
             try:
@@ -55,8 +56,8 @@ class Usr_Create:
                 print(e)
                  
         except Exception as e:
-            print(e)
-            
+            print(e)        
+    # login the account of user
     def usr_login(self):
         try:
             if len(self.__usr_passwd) == 64:
@@ -81,7 +82,9 @@ class Usr_Create:
         except Exception as e:
             print(e)
             
+# change new password for user account
 class pass_recover:
+    # email verify
     def check_email(self,username,email):
         try:
             with open("./Files/usr_pass.json","r") as file:
@@ -93,6 +96,7 @@ class pass_recover:
                             return True
         except Exception as e:
             print(e)
+    # input new password after email verify
     def change_pass(self,username,new_passwd):
         try:
                 with open("./Files/usr_pass.json","r") as file:
