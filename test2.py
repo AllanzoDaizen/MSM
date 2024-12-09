@@ -17,7 +17,7 @@ def listen(client_socket,username):
             if not request:
                 continue
             else:
-                print(f"\nrecived mes: {request}\n")
+                # print(f"\nrecived mes: {request}\n")
                 message_decrypt.decrypt_message(request)
             if request == "exit":
                 break
@@ -30,7 +30,7 @@ def send_mes(peer,username):
     try:
         while True:
             message_encrypt = encrypt.Encryption(username)
-            message = input("Enter a message: ")
+            message = input(" ")
             mes=message_encrypt.encrypt_message(message)
             mes = mes.encode('utf-8')
             if message == "exit":
@@ -68,11 +68,12 @@ def main(choices):
         print("-"*36)
 
         username = input("Username         : ")
+        email = input("Email            : ")
         usr_pass = input("Password         : ")
         usr_verifypass = input("Confirm password : ")
 
         if usr_pass == usr_verifypass:
-            authen = usr_authen.Usr_Create(username, usr_pass)
+            authen = usr_authen.Usr_Create(username, usr_pass,email)
             if authen.usr_pass() == False:
                 print("Try Again!!\n")
      
@@ -99,21 +100,29 @@ def main(choices):
             targ_name=input("target_username: ")
             
 
-            login = usr_authen.Usr_Create(username, usr_pass)
+            login = usr_authen.Usr_Create(username, usr_pass,email=None)
             if login.usr_login() == True:
                 print("Login successfully!\n")
                 peer(username,targ_name)
                 
     elif choices == 3:
-        print("-"*36)
-        print("|         passwd_recovery         |")
-        print("-"*36)
-        
-        username = input("Username         : ")
-        
-        pass_recover=usr_authen.pass_recover(username)
-        password=pass_recover.check_for_pass()
-        print("password          :",password)
+        while True:
+            print("-"*36)
+            print("|       Password Recovery       |")
+            print("-"*36)
+            username = input("Username: ")
+            email = input("Email: ")
+            recovery = usr_authen.pass_recover()
+            if recovery.check_email(username, email) == True:
+                usr_newpass = input("New password:")
+                usr_confirm_new_pass = input("Confirm new password: ")
+                if usr_newpass == usr_confirm_new_pass:
+                    
+                    if recovery.change_pass(username, usr_newpass) == True:
+                        print("Password changed successfully!")
+                        break
+                    else:
+                        print("Password cannot change! Try again!")
     
                 
 if __name__ == "__main__":

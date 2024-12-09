@@ -33,7 +33,7 @@ class Decryption:
             )
 
             # Decode the decrypted message back to a string
-            print(f"Message decrypted: {decrypted_message.decode()}")
+            print(f" {decrypted_message.decode()}")
             return decrypted_message.decode()
 
         except Exception as e:
