@@ -4,10 +4,7 @@ from base64 import b64decode, b64encode
 from Code import encrypt, decrypt, usr_authen, key_generate, create_folder
 import json
 import hashlib
-import socket
-import threading
 
-        
 def main(choices):
     if choices == 1:
         while True:
@@ -16,11 +13,12 @@ def main(choices):
             print("-"*36)
 
             username = input("Username         : ")
+            email = input("Email            : ")
             usr_pass = input("Password         : ")
             usr_verifypass = input("Confirm password : ")
 
             if usr_pass == usr_verifypass:
-                authen = usr_authen.Usr_Create(username, usr_pass)
+                authen = usr_authen.Usr_Create(username, usr_pass, email)
                 if authen.usr_pass() == False:
                     print("Try Again!!\n")
                     continue  
@@ -44,7 +42,7 @@ def main(choices):
             username = input("Username         : ")
             usr_pass = input("Password         : ")
 
-            login = usr_authen.Usr_Create(username, usr_pass)
+            login = usr_authen.Usr_Create(username, usr_pass, email=None)
             if login.usr_login() == True:
                 print("Login successfully!\n")
                 while True:
@@ -71,9 +69,7 @@ def main(choices):
                             elif thirdChoice == 1:
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
-                                a=message_encrypt.encrypt_message(message)
-                                print(a)
-                                
+                                message_encrypt.encrypt_message(message)
 
                             elif thirdChoice == 2:
                                 message_decrypt = decrypt.Decryption(username)
@@ -108,7 +104,25 @@ def main(choices):
 
             else:
                 print("Login Failed!")
-
+    elif choices == 3:
+        while True:
+            print("-"*36)
+            print("|       Password Recovery       |")
+            print("-"*36)
+            username = input("Username: ")
+            email = input("Email: ")
+            recovery = usr_authen.pass_recover(username, email, usr_newpass = None)
+            if recovery.check_email == True:
+                usr_newpass = input("New password:")
+                usr_confirm_new_pass = input("Confirm new password: ")
+                if usr_newpass == usr_confirm_new_pass:
+                    recovery = usr_authen.pass_recover(username, email, usr_newpass)
+                    recovery.check_for_pass()
+                    if recovery.check_for_pass() == True:
+                        print("Password changed successfully!")
+                    else:
+                        print("Password cannot change! Try again!")
+            
 if __name__ == "__main__":
     while True:
         print("-"*36)
