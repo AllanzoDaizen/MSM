@@ -2,9 +2,10 @@ import hashlib
 import json
 
 class Usr_Create:
-    def __init__(self,usr_name,usr_passwd):
+    def __init__(self,usr_name,usr_passwd,email):
         self.usr_name=usr_name
         self.__usr_passwd=usr_passwd
+        self.email=email
         
     def usr_pass(self):
         try:
@@ -26,6 +27,29 @@ class Usr_Create:
                         else:
                             new_data[self.usr_name]=hashed_pass
                             with open("./Files/usr_pass.json","w") as f:
+                                json.dump(new_data,f,indent=4)
+            except Exception as e:
+                print(e)
+                 
+        except Exception as e:
+            print(e)
+        
+        try:
+            usr_email_dict={self.usr_name:self.email}
+            try:
+                with open("./Files/usr_email.json","r") as file: 
+                    content=file.read().strip()
+                    if not content:
+                        with open("./Files/usr_email.json","w") as f:
+                            json.dump(usr_email_dict,f,indent=4)
+                    if content:
+                        new_data=json.loads(content)
+                        if self.usr_name in new_data:
+                            print(f"The username:{self.usr_name} is already existed")
+                            return False
+                        else:
+                            new_data[self.usr_name]=self.email
+                            with open("./Files/usr_email.json","w") as f:
                                 json.dump(new_data,f,indent=4)
             except Exception as e:
                 print(e)
@@ -58,17 +82,32 @@ class Usr_Create:
             print(e)
             
 class pass_recover:
-    def __init__(self,username):
+    def __init__(self,username,new_passwd,email):
         self.username=username
+        self.__new_passwd=new_passwd
+        self.email=email
     def check_for_pass(self):
         try:
             with open("./Files/usr_pass.json","r") as file:
                 data=json.load(file)
                 if(self.username in data):
-                    return data[self.username]
+                    with open("./Files/usr_email.json","r") as f:
+                        us_em=json.load(f)
+                        if(self.email == us_em[self.username]):
+                            passwd = hashlib.sha256()
+                            passwd.update(self.__new_passwd.encode("utf-8"))
+                            hashed_pass=passwd.hexdigest()
+                            data[self.username]=hashed_pass
+                            with open("./Files/usr_pass.json","w") as f:
+                                json.dump(data,f,indent=4)
+                            return True
+                        else:
+                            return False 
+                else:
+                    return False
+
         except Exception as e:
             print(e)
-
-
+        
 
 

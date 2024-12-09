@@ -4,7 +4,10 @@ from base64 import b64decode, b64encode
 from Code import encrypt, decrypt, usr_authen, key_generate, create_folder
 import json
 import hashlib
+import socket
+import threading
 
+        
 def main(choices):
     if choices == 1:
         while True:
@@ -68,7 +71,9 @@ def main(choices):
                             elif thirdChoice == 1:
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
-                                message_encrypt.encrypt_message(message)
+                                a=message_encrypt.encrypt_message(message)
+                                print(a)
+                                
 
                             elif thirdChoice == 2:
                                 message_decrypt = decrypt.Decryption(username)
@@ -111,7 +116,7 @@ if __name__ == "__main__":
         print("-"*36)
         print("1. Create Account\n2. Login\n3. Forget Password\n4. Exit")
         ch = int(input("Enter a choice: "))
-        if ch == 5:
+        if ch == 4:
             break
         else:
             main(ch)
