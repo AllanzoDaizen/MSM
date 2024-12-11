@@ -1,7 +1,8 @@
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 from base64 import b64decode, b64encode
-from Code import encrypt, decrypt, usr_authen, key_generate, create_folder
+from Code import encrypt, decrypt, usr_authen, key_generate, create_folder, secret_user
+import getpass
 import json
 import hashlib
 
@@ -9,18 +10,18 @@ def main(choices):
     if choices == 1:
         while True:
             print("-"*36)
-            print("|         Create account         |")
+            print("|\t   Create account\t   |")
             print("-"*36)
 
-            username = input("Username         : ")
-            email = input("Email            : ")
-            usr_pass = input("Password         : ")
-            usr_verifypass = input("Confirm password : ")
+            username = input("Username\t : ")
+            email = input("Email\t\t : ")
+            usr_pass = getpass.getpass("Password\t : ")
+            usr_verifypass = getpass.getpass("Confirm password : ")
 
             if usr_pass == usr_verifypass:
                 authen = usr_authen.Usr_Create(username, usr_pass, email)
                 if authen.usr_pass() == False:
-                    print("Try Again!!\n")
+                    print("Try Again!\n")
                     continue  
                 else:
                     CreateFd = create_folder.Create_folder(username)
@@ -34,31 +35,33 @@ def main(choices):
                 print("Passwords do not match. Please try again.\n")
                 continue
     elif choices == 2:
-        while True:
+        i = 3
+        while i > 0:
             print("-"*36)
-            print("|         Login         |")
+            print("|\t\tLogin\t\t   |")
             print("-"*36)
 
             username = input("Username         : ")
             usr_pass = input("Password         : ")
 
             login = usr_authen.Usr_Create(username, usr_pass, email=None)
+            
             if login.usr_login() == True:
                 print("Login successfully!\n")
                 while True:
                     print("-"*36)
-                    print("|       Operation       |")
+                    print("|\t      Operation\t\t   |")
                     print("-"*36)
-                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3. Exit")
+                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3. Secret Chat\n4. Exit")
                     secondChoice = int(input("Enter a choice: "))
 
-                    if secondChoice == 3:
+                    if secondChoice == 4:
                         break
 
                     elif secondChoice == 1:
                         while True:
                             print("-"*36)
-                            print("|       Message       |")
+                            print("|\t     Message\t\t   |")
                             print("-"*36)
                             print("1. Encryption\n2. Decryption\n3. Exit")   
                             thirdChoice = int(input("Enter a choice: "))
@@ -69,17 +72,20 @@ def main(choices):
                             elif thirdChoice == 1:
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
-                                message_encrypt.encrypt_message(message)
+                                mess_encrypted = message_encrypt.encrypt_message(message)
+                                print("Message encrypted: {0}".format(mess_encrypted))
 
                             elif thirdChoice == 2:
                                 message_decrypt = decrypt.Decryption(username)
                                 message = input("Enter a message: ")
-                                message_decrypt.decrypt_message(message)
-                                
+                                mess_decrypt = message_decrypt.decrypt_message(message)
+                                print("Message decrypted: {0}".format(mess_decrypt))
+
+
                     elif secondChoice == 2:
                         while True:
                             print("-"*36)
-                            print("|       File        |")
+                            print("|\t\tFile\t\t   |")
                             print("-"*36)
                             print("1. Encryption\n2. Decryption\n3. Exit")   
                             thirdChoice = int(input("Enter a choice: "))
@@ -98,16 +104,27 @@ def main(choices):
                                 print(f"File path: {input_file} decrypted !")
                                 output_file = input("Enter a path to save: ")
                                 file_decrypt.decrypt_file(input_file, output_file) 
-
-                if secondChoice == 3:
-                    break
-
+                    elif secondChoice == 3:
+                        print("-"*36)
+                        targ_name = input("Target's username: ")
+                        secret_user.peer(username, targ_name)
+                        
+                break  
+                
             else:
                 print("Login Failed!")
+                i -= 1
+
+            if i == 0:
+                print("Forgot password?")
+                back = int(input("Enter 1 to go back: "))
+                if back == 1:
+                    break
+
     elif choices == 3:
         while True:
             print("-"*36)
-            print("|       Password Recovery       |")
+            print("|\t  Password Recovery\t   |")
             print("-"*36)
             username = input("Username: ")
             email = input("Email: ")

@@ -23,7 +23,7 @@ class Usr_Create:
                     if content:
                         new_data=json.loads(content)
                         if self.usr_name in new_data:
-                            print(f"The username:{self.usr_name} is already existed")
+                            print(f"{self.usr_name} is already existed!")
                             return False
                         else:
                             new_data[self.usr_name]=hashed_pass
