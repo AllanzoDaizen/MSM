@@ -42,7 +42,7 @@ def main(choices):
             print("-"*36)
 
             username = input("Username         : ")
-            usr_pass = input("Password         : ")
+            usr_pass = getpass.getpass("Password         : ")
 
             login = usr_authen.Usr_Create(username, usr_pass, email=None)
             
@@ -126,19 +126,22 @@ def main(choices):
             print("-"*36)
             print("|\t  Password Recovery\t   |")
             print("-"*36)
-            username = input("Username: ")
-            email = input("Email: ")
+            username = input("Username\t\t: ")
+            email = input("Email\t\t\t: ")
             recovery = usr_authen.pass_recover()
             if recovery.check_email(username, email) == True:
-                usr_newpass = input("New password:")
-                usr_confirm_new_pass = input("Confirm new password: ")
+                usr_newpass = getpass.getpass("New password\t\t:")
+                usr_confirm_new_pass = getpass.getpass("Confirm password\t: ")
                 if usr_newpass == usr_confirm_new_pass:
-                    
                     if recovery.change_pass(username, usr_newpass) == True:
                         print("Password changed successfully!")
                         break
                     else:
-                        print("Password cannot change! Try again!")
+                        print("Password cannot changed!")
+                else:
+                    print("Password does not match! Try again!")
+            else:
+                print("Username or Email incorrect! Try again!")
             
 if __name__ == "__main__":
     while True:
