@@ -44,23 +44,19 @@ def send_mes(peer, username):
 def peer(username, targ_name):
     try:
         peer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        role = int(input("Who are you?\n1. First Person(server)\n2. Second Person(client)\nEnter a choice: "))
+        peer_ip = "localhost"
+        peer_port = 2000
 
-        if role == 1:
-            peer_ip = "localhost"
-            peer_port = 2000
+        try:
             peer.bind((peer_ip, peer_port))
             peer.listen(1)
-            print("Waiting for connection...")
+            print("waiting for connection...")
             client_socket, client_add = peer.accept()
             print(f"Connected with {client_add}")
             peer = client_socket
-        elif role == 2:
-            peer.connect(("localhost", 2000))
-            print("Connected to the server.")
-        else:
-            print("Invalid role! Exiting...")
-            return
+        except socket.error:
+            peer.connect((peer_ip, peer_port))
+            print("connected...")
 
         # Start listening and sending threads
         listen_thread = threading.Thread(target=listen, args=(peer, username,))
@@ -71,6 +67,6 @@ def peer(username, targ_name):
 
         listen_thread.join()
         send_thread.join()
+
     except Exception as e:
         print(f"Error in peer setup: {e}")
-
