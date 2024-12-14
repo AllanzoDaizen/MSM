@@ -39,7 +39,7 @@ class App:
     def add_logo(self):
         try:
             # Load the image using PIL
-            img = Image.open("MSS.png")
+            img = Image.open("./Assets/MSS.png")
             img = img.resize((250, 200))  # Resize to the desired dimensions
 
             # Convert the image to a format compatible with customtkinter
