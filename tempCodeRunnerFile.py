@@ -1,1 +1,0 @@
- # ctk.CTkButton(self.decrypted_frame, text="Save As", width=300, height=40, font=("Berlin Sans FB Demi", 14), fg_color="#4F6D4F", hover_color="#556B2F", command=save_as_action).pack(pady=10)

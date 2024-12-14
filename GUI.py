@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 from Code import usr_authen, create_folder, key_generate, encrypt, decrypt
 from tkinter import PhotoImage
 from PIL import Image, ImageTk
+import hashlib
 import json
 import os
 
@@ -10,7 +11,7 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title("MILITARY SECRET MESSAGE")
-        self.root.geometry("900x750")
+        self.root.geometry("900x800")
         self.page_history = []  # History to keep track of the pages
         ctk.set_appearance_mode("dark")  # Dark mode for modern feel
         ctk.set_default_color_theme("green") 
@@ -27,25 +28,26 @@ class App:
 
     def create_main_menu(self):
         self.add_logo()
-        ctk.CTkLabel(self.root, text="MILITARY SECRET MESSAGE", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=30)
+        ctk.CTkLabel(self.root, text="MILITARY SECRET MESSAGE", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=20)
 
         ctk.CTkButton(self.root, text="Create Account", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.create_account, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
         ctk.CTkButton(self.root, text="Login", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.login, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
-        ctk.CTkButton(self.root, text="Forgot Password", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=None, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+        ctk.CTkButton(self.root, text="Forgot Password", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.forgot_password, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
+
         ctk.CTkButton(self.root, text="Exit", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.root.quit, fg_color="#ff0000", hover_color="#556B2F").pack(pady=20)
 
     def add_logo(self):
         try:
             # Load the image using PIL
-            img = Image.open("Military.png")
-            img = img.resize((200, 200))  # Resize to the desired dimensions
+            img = Image.open("MSS.png")
+            img = img.resize((250, 200))  # Resize to the desired dimensions
 
             # Convert the image to a format compatible with customtkinter
             self.logo = ImageTk.PhotoImage(img)
 
             # Create a label and set the image
             logo_label = ctk.CTkLabel(self.root, image=self.logo)
-            logo_label.pack(pady=20)
+            logo_label.pack(pady=30)
         except Exception as e:
             print(f"Error loading logo: {e}")
 
@@ -265,14 +267,100 @@ class App:
                 except Exception as e:
                     messagebox.showerror("Error", f"Error decrypting file: {e}")
 
-
         # Button for file decryption
         ctk.CTkButton(self.root, text="Decrypt File", font=("Arial", 18), command=decrypt_file_action, fg_color="#4F6D4F", hover_color="#556B2F", width=200, height=40).pack(pady=20)
 
         # Add back button to return to previous page
         self.operation_back_button()
 
+    def forgot_password(self):
+        self.clear_screen()
+        self.page_history.append(self.create_main_menu)
 
+        ctk.CTkLabel(self.root, text="Forgot Password", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=30)
+
+        #Ask for username and email
+        username_entry = ctk.CTkEntry(self.root, font=("Arial", 18), placeholder_text="Username", width=300, height=50)
+        username_entry.pack(pady=15)
+
+        email_entry = ctk.CTkEntry(self.root, font=("Arial", 18), placeholder_text="Enter your registered email", width=300, height=50)
+        email_entry.pack(pady=20)
+
+        #Verify the username and email
+        def verify_user_action():
+            username = username_entry.get()
+            email = email_entry.get()
+
+            #Check if email exists in usr_email.json
+            try:
+                with open("./Files/usr_email.json", "r") as email_file:
+                    email_data = json.load(email_file)
+
+                with open("./Files/usr_pass.json", "r") as pass_file:
+                    pass_data = json.load(pass_file)
+
+                #Verify if the email and username match
+                if email_data.get(username) == email:
+                    self.show_recovery_password_page(username, pass_data)
+                else:
+                    messagebox.showerror("Error", "Username or email not registered!")
+            except Exception as e:
+                messagebox.showerror("Error", f"Error processing request: {e}")
+
+        ctk.CTkButton(self.root, text="Verify", font=("Berlin Sans FB Demi", 18), command=verify_user_action, fg_color="#4F6D4F", hover_color="#556B2F", width=150, height=50).pack(pady=20)
+
+        self.create_back_button()
+
+    def show_recovery_password_page(self, username, pass_data):
+        self.clear_screen()
+
+        ctk.CTkLabel(self.root, text="Reset Password", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=30)
+
+        #Allow the user to input a new password
+        new_password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*", placeholder_text="Enter new password", width=300, height=50)
+        new_password_entry.pack(pady=15)
+
+        confirm_password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*", placeholder_text="Confirm new password", width=300, height=50)
+        confirm_password_entry.pack(pady=15)
+
+        #Save the new password and overwrite the old one
+        def save_new_password():
+            new_password = new_password_entry.get()
+            confirm_password = confirm_password_entry.get()
+
+            if not new_password or not confirm_password:
+                messagebox.showerror("Error", "Password fields cannot be empty!")
+                return
+
+            if new_password != confirm_password:
+                messagebox.showerror("Error", "Passwords do not match! Please try again.")
+                new_password_entry.delete(0, "end")
+                confirm_password_entry.delete(0, "end")
+                return
+
+            #Hash the new password
+            hashed_password = hashlib.sha256(new_password.encode("utf-8")).hexdigest()
+
+            #Update the password in the JSON file
+            try:
+                if username in pass_data:
+                    pass_data[username] = hashed_password
+
+                    #Save the updated passwords
+                    with open("./Files/usr_pass.json", "w") as pass_file:
+                        json.dump(pass_data, pass_file, indent=4)
+
+                    messagebox.showinfo("Success", "Password has been updated successfully!")
+                    self.clear_screen()
+                    self.create_main_menu()
+                else:
+                    messagebox.showerror("Error", "User not found in the system!")
+            except Exception as e:
+                messagebox.showerror("Error", f"Error updating password: {e}")
+
+        ctk.CTkButton(self.root, text="Save New Password", font=("Berlin Sans FB Demi", 18), command=save_new_password, fg_color="#4F6D4F", hover_color="#556B2F", width=200, height=50).pack(pady=20)
+
+        self.create_back_button()
 
     def operation_back_button(self):
         ctk.CTkButton(self.root, text="Back", font=("Berlin Sans FB Demi", 18), command=self.operation_go_back, fg_color="#ff0000", hover_color="#556B2F").pack(pady=20)
