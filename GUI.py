@@ -9,7 +9,7 @@ import os
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("MILITARY SECRET MESSAGE")
+        self.root.title("SecureOps")
         self.root.geometry("900x800")
         self.page_history = []  # History to keep track of the pages
         ctk.set_appearance_mode("dark")  # Dark mode for modern feel
@@ -26,8 +26,9 @@ class App:
 
     def create_main_menu(self):
         self.add_logo()
-        ctk.CTkLabel(self.root, text="MILITARY SECRET MESSAGE", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=20)
-
+        ctk.CTkLabel(self.root, text="SECURE OPS", font=("Berlin Sans FB Demi", 30), text_color="white").pack(pady=5)
+        ctk.CTkLabel(self.root, text="MILITARY SECRET SERVICE", font=("Berlin Sans FB Demi", 20), text_color="white").pack(pady=0)
+        
         ctk.CTkButton(self.root, text="Create Account", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.create_account, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
         ctk.CTkButton(self.root, text="Login", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.login, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
         ctk.CTkButton(self.root, text="Forgot Password", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.forgot_password, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
@@ -443,7 +444,7 @@ class App:
                 messagebox.showinfo("File Saved", f"File saved as: {save_path}")
             except Exception as e:
                 messagebox.showerror("Error", f"An error occurred: {e}")
-
+   
         ctk.CTkButton(self.decrypted_frame, text="Save As", width=300, height=40, font=("Berlin Sans FB Demi", 14), fg_color="#4F6D4F", hover_color="#556B2F", command=save_as_action).pack(pady=10)
 
 
