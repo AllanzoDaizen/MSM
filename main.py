@@ -34,132 +34,169 @@ def main(choices):
             else:
                 print("Passwords do not match. Please try again.\n")
                 continue
+    
     elif choices == 2:
         i = 3
         while i > 0:
-            print("-"*36)
+            print("-" * 36)
             print("|\t\tLogin\t\t   |")
-            print("-"*36)
+            print("-" * 36)
 
             username = input("Username         : ")
             usr_pass = getpass.getpass("Password         : ")
 
-            login = usr_authen.Usr_Create(username, usr_pass, email=None)
-            
-            if login.usr_login() == True:
-                print("Login successfully!\n")
-                while True:
-                    print("-"*36)
-                    print("|\t      Operation\t\t   |")
-                    print("-"*36)
-                    print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3. Secret Chat\n4. Exit")
-                    secondChoice = int(input("Enter a choice: "))
-
-                    if secondChoice == 4:
-                        break
-
-                    elif secondChoice == 1:
-                        while True:
-                            print("-"*36)
-                            print("|\t     Message\t\t   |")
-                            print("-"*36)
-                            print("1. Encryption\n2. Decryption\n3. Exit")   
-                            thirdChoice = int(input("Enter a choice: "))
-
-                            if thirdChoice == 3:
+            try:
+                login = usr_authen.Usr_Create(username, usr_pass, email=None)
+                if login.usr_login():
+                    print("Login successfully!\n")
+                    while True:
+                        print("-" * 36)
+                        print("|\t      Operation\t\t   |")
+                        print("-" * 36)
+                        print("1. Message Encryption and Decryption\n2. File Encryption and Decryption\n3. Secret Chat\n4. Exit")
+                        try:
+                            secondChoice = int(input("Enter a choice: "))
+                            if secondChoice == 4:
                                 break
 
-                            elif thirdChoice == 1:
-                                message_encrypt = encrypt.Encryption(username)
-                                message = input("Enter a message: ")
+                            elif secondChoice == 1:
+                                while True:
+                                    print("-" * 36)
+                                    print("|\t     Message\t\t   |")
+                                    print("-" * 36)
+                                    print("1. Encryption\n2. Decryption\n3. Exit")   
+                                    try:
+                                        thirdChoice = int(input("Enter a choice: "))
+                                        if thirdChoice == 3:
+                                            break
 
-                                if not message.strip():
-                                    print("Error: Message cannot be empty.")
-                                else:
-                                    mess_encrypted = message_encrypt.encrypt_message(message)
-                                    print("Message encrypted: {0}".format(mess_encrypted))
+                                        elif thirdChoice == 1:
+                                            message_encrypt = encrypt.Encryption(username)
+                                            message = input("Enter a message: ")
 
+                                            if not message.strip():
+                                                print("Error: Message cannot be empty.")
+                                            else:
+                                                mess_encrypted = message_encrypt.encrypt_message(message)
+                                                print("Message encrypted: {0}".format(mess_encrypted))
 
-                            elif thirdChoice == 2:
-                                message_decrypt = decrypt.Decryption(username)
-                                message = input("Enter a message: ")
+                                        elif thirdChoice == 2:
+                                            message_decrypt = decrypt.Decryption(username)
+                                            message = input("Enter a message: ")
 
-                                if not message.strip():
-                                    print("Message cannot be empty.")
-                                else:
-                                    mess_decrypt = message_decrypt.decrypt_message(message)
-                                    print("Message decrypted: {0}".format(mess_decrypt))
+                                            if not message.strip():
+                                                print("Message cannot be empty.")
+                                            else:
+                                                mess_decrypt = message_decrypt.decrypt_message(message)
+                                                print("Message decrypted: {0}".format(mess_decrypt))
+                                        else:
+                                            print("Please enter a number (1-3).")
+                                    except ValueError:
+                                        print("Error: Invalid input. Please enter a number (1-3).")
+                                    except Exception as e:
+                                        print(f"An error occurred: {e}")
 
+                            elif secondChoice == 2:
+                                while True:
+                                    print("-" * 36)
+                                    print("|\t\tFile\t\t   |")
+                                    print("-" * 36)
+                                    print("1. Encryption\n2. Decryption\n3. Exit")   
+                                    try:
+                                        thirdChoice = int(input("Enter a choice: "))
+                                        if thirdChoice == 3:
+                                            break
+                                        elif thirdChoice == 1:
+                                            file_encrypt = encrypt.Encryption(username)
+                                            input_file = input("Enter a file path: ")
+                                            output_file = input("Enter a path to save: ")
+                                            file_encrypt.encrypt_file(input_file, output_file) 
+                                            print(f"File {input_file} encrypted successfully and saved to {output_file}!")
 
-                    elif secondChoice == 2:
-                        while True:
-                            print("-"*36)
-                            print("|\t\tFile\t\t   |")
-                            print("-"*36)
-                            print("1. Encryption\n2. Decryption\n3. Exit")   
-                            thirdChoice = int(input("Enter a choice: "))
-                            if thirdChoice == 3:
-                                break
-                            elif thirdChoice == 1:
-                                file_encrypt = encrypt.Encryption(username)
-                                input_file = input("Enter a file path: ")
-                                print(f"File path: {input_file} encrypted !")
-                                output_file = input("Enter a path to save: ")
-                                file_encrypt.encrypt_file(input_file, output_file) 
+                                        elif thirdChoice == 2:
+                                            file_decrypt = decrypt.Decryption(username)
+                                            input_file = input("Enter a file path: ")
+                                            output_file = input("Enter a path to save: ")
+                                            file_decrypt.decrypt_file(input_file, output_file) 
+                                            print(f"File {input_file} decrypted successfully and saved to {output_file}!")
+                                        else:
+                                            print("Please enter a number (1-3).")
+                                    except ValueError:
+                                        print("Error: Invalid input. Please enter a number (1-3).")
+                                    except Exception as e:
+                                        print(f"An error occurred: {e}")
 
-                            elif thirdChoice == 2:
-                                file_decrypt = decrypt.Decryption(username)
-                                input_file = input("Enter a file path: ")
-                                print(f"File path: {input_file} decrypted !")
-                                output_file = input("Enter a path to save: ")
-                                file_decrypt.decrypt_file(input_file, output_file) 
-                    elif secondChoice == 3:
-                        print("-"*36)
-                        targ_name = input("Target's username: ")
-                        secret_user.peer(username, targ_name)
-                        
-                break  
-                
-            else:
-                print("Login Failed!")
-                i -= 1
+                            elif secondChoice == 3:
+                                print("-" * 36)
+                                targ_name = input("Target's username: ")
+                                try:
+                                    secret_user.peer(username, targ_name)
+                                except Exception as e:
+                                    print(f"Error establishing secret chat: {e}")
+                            else:
+                                print("Error: Invalid choice. Please select 1-4.")
 
-            if i == 0:
-                print("Forgot password?")
-                back = int(input("Enter 1 to go back: "))
-                if back == 1:
+                        except ValueError:
+                            print("Error: Invalid input. Please enter a number (1-4).")
+
                     break
+                else:
+                    print("Login Failed!")
+                    i -= 1
+
+                if i == 0:
+                    print("Access denied!")
+                    print("Forgot password?")
+                    try:
+                        back = int(input("Enter 1 to go back: "))
+                        if back == 1:
+                            break
+                    except ValueError:
+                        print("Error: Invalid input. Returning to main menu.")
+            except Exception as e:
+                print(f"An error occurred during login: {e}")
 
     elif choices == 3:
         while True:
-            print("-"*36)
+            print("-" * 36)
             print("|\t  Password Recovery\t   |")
-            print("-"*36)
-            username = input("Username\t\t: ")
+            print("-" * 36)
+            username = input("Username\t\t\t: ")
             email = input("Email\t\t\t: ")
-            recovery = usr_authen.pass_recover()
-            if recovery.check_email(username, email) == True:
-                usr_newpass = getpass.getpass("New password\t\t:")
-                usr_confirm_new_pass = getpass.getpass("Confirm password\t: ")
-                if usr_newpass == usr_confirm_new_pass:
-                    if recovery.change_pass(username, usr_newpass) == True:
-                        print("Password changed successfully!")
-                        break
+            try:
+                recovery = usr_authen.pass_recover()
+                if recovery.check_email(username, email):
+                    usr_newpass = getpass.getpass("New password\t\t\t:")
+                    usr_confirm_new_pass = getpass.getpass("Confirm password\t: ")
+                    if usr_newpass == usr_confirm_new_pass:
+                        if recovery.change_pass(username, usr_newpass):
+                            print("Password changed successfully!")
+                            break
+                        else:
+                            print("Error: Password change failed.")
                     else:
-                        print("Password cannot changed!")
+                        print("Passwords do not match! Try again!")
                 else:
-                    print("Password does not match! Try again!")
-            else:
-                print("Username or Email incorrect! Try again!")
-            
+                    print("Error: Username or Email incorrect! Try again!")
+            except Exception as e:
+                print(f"An error occurred during password recovery: {e}")
+
 if __name__ == "__main__":
     while True:
-        print("-"*36)
+        print("-" * 36)
         print("|   MNF Encryption and Decryption   |")
-        print("-"*36)
+        print("-" * 36)
         print("1. Create Account\n2. Login\n3. Forget Password\n4. Exit")
-        ch = int(input("Enter a choice: "))
-        if ch == 4:
-            break
-        else:
-            main(ch)
+        try:
+            ch = int(input("Enter a choice: "))
+            if ch == 4:
+                print("Exiting the program. Goodbye!")
+                break
+            elif 1 <= ch <= 3:
+                main(ch)
+            else:
+                print("Error: Please enter a valid choice (1-4).")
+        except ValueError:
+            print("Error: Invalid input. Please enter a number (1-4).")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
