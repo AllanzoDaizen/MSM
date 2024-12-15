@@ -161,12 +161,12 @@ def main(choices):
             print("-" * 36)
             print("|\t  Password Recovery\t   |")
             print("-" * 36)
-            username = input("Username\t\t\t: ")
+            username = input("Username\t\t: ")
             email = input("Email\t\t\t: ")
             try:
                 recovery = usr_authen.pass_recover()
                 if recovery.check_email(username, email):
-                    usr_newpass = getpass.getpass("New password\t\t\t:")
+                    usr_newpass = getpass.getpass("New password\t\t:")
                     usr_confirm_new_pass = getpass.getpass("Confirm password\t: ")
                     if usr_newpass == usr_confirm_new_pass:
                         if recovery.change_pass(username, usr_newpass):

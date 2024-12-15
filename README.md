@@ -15,6 +15,9 @@ This tool leverages RSA encryption to ensure data security. This tool supports b
   - [Security](#security)
   - [Contributing](#contributing)
   - [Project Overview](#project-overview)
+    - [CLI APLLICATION](#cli-apllication)
+    - [GUI APPLICATION](#gui-application)
+  - [Conclusion](#conclusion)
 
 ## Features
 
@@ -138,7 +141,7 @@ Contributions are welcome! Feel free to submit a pull request or open an issue f
 ---
  
 ## Project Overview
-- **CLI Application**
+### CLI APLLICATION
 - Menu
   - ![Screenshot 2024-12-15 220156](https://github.com/user-attachments/assets/0d074a74-1a81-4026-8e3c-216764cf6b06)
 - Create Account
@@ -155,8 +158,10 @@ It is a testing, this function supports only the in local machine. You can run 2
 - To exit this operation type "exit"
 - Forget password
 - ![image](https://github.com/user-attachments/assets/883eaedd-23c3-4da9-8444-972e7ba77576)
--  ** GUI Application **
-In this project, by having some problems with GUI platfom to handle the P2P connection, We haven't done the Secret Message part in our GUI application.
+
+### GUI APPLICATION
+
+- In this project, by having some problems with GUI platfom to handle the P2P connection, We haven't done the Secret Message part in our GUI application.
 - Menu
 - ![image](https://github.com/user-attachments/assets/bd20a218-9b62-425a-983b-31e770f756cd)
 - Create Account
