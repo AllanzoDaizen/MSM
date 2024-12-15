@@ -183,9 +183,9 @@ def main(choices):
 
 if __name__ == "__main__":
     while True:
-        print("-" * 36)
-        print("|   MNF Encryption and Decryption   |")
-        print("-" * 36)
+        print("-" * 25)
+        print("|\tSecureOps\t|")
+        print("-" * 25)
         print("1. Create Account\n2. Login\n3. Forget Password\n4. Exit")
         try:
             ch = int(input("Enter a choice: "))

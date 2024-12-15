@@ -1,9 +1,10 @@
-# MILITARY SECRET MESSAGE
+# Secure Ops
 
-Military Secret Message is a Python application that allows users to create secure accounts, encrypt and decrypt messages or files, and communicate securely with others in localhost. This tool leverages RSA encryption to ensure data security. This tool supports both `CLI` and `GUI`.
+Secure Ops is a Python application that allows users to create secure accounts, encrypt and decrypt messages or files, and communicate securely with others in localhost. 
+This tool leverages RSA encryption to ensure data security. This tool supports both `CLI` and `GUI`.
 
 ## Table of Contents
-- [MILITARY SECRET MESSAGE](#military-secret-message)
+- [Secure Ops](#secure-ops)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installation](#installation)
@@ -13,8 +14,7 @@ Military Secret Message is a Python application that allows users to create secu
   - [File Structure](#file-structure)
   - [Security](#security)
   - [Contributing](#contributing)
-  - [License](#license)
-  - [Overview](#overview)
+  - [Project Overview](#project-overview)
 
 ## Features
 
@@ -53,6 +53,9 @@ pip install pycryptodome
 pip install hashlib
 ```
 ```bash
+pip install tkinter
+```
+```bash
 pip install customtkinter
 ```
 ```bash
@@ -86,6 +89,7 @@ python GUI.py
 
 2. **Login**:
    - Enter your username and password to access the system.
+   - User have 3 attempts to Login.
    - After logging in, you can:
      - Encrypt/Decrypt Messages
      - Encrypt/Decrypt Files
@@ -113,6 +117,8 @@ python GUI.py
   - `secret_user.py`: Handles secret chat functionality.
 - `Assets/`
   - `MSS.png`: logo of application.
+- `File/`
+  - `User-directory`: a unique directory for each user.
 ---
 
 ## Security
@@ -121,18 +127,18 @@ python GUI.py
 - Passwords are hashed using SHA256 for additional security.
 - Encryption keys are generated and stored uniquely for each user.
 
+
 ---
 
 ## Contributing
 
 Contributions are welcome! Feel free to submit a pull request or open an issue for any suggestions or improvements.
 
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ---
  
-## Overview
+## Project Overview
+- **CLI Application**
+  
+
+
