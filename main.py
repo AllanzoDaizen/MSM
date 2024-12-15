@@ -72,14 +72,23 @@ def main(choices):
                             elif thirdChoice == 1:
                                 message_encrypt = encrypt.Encryption(username)
                                 message = input("Enter a message: ")
-                                mess_encrypted = message_encrypt.encrypt_message(message)
-                                print("Message encrypted: {0}".format(mess_encrypted))
+
+                                if not message.strip():
+                                    print("Error: Message cannot be empty.")
+                                else:
+                                    mess_encrypted = message_encrypt.encrypt_message(message)
+                                    print("Message encrypted: {0}".format(mess_encrypted))
+
 
                             elif thirdChoice == 2:
                                 message_decrypt = decrypt.Decryption(username)
                                 message = input("Enter a message: ")
-                                mess_decrypt = message_decrypt.decrypt_message(message)
-                                print("Message decrypted: {0}".format(mess_decrypt))
+
+                                if not message.strip():
+                                    print("Message cannot be empty.")
+                                else:
+                                    mess_decrypt = message_decrypt.decrypt_message(message)
+                                    print("Message decrypted: {0}".format(mess_decrypt))
 
 
                     elif secondChoice == 2:

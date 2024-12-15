@@ -6,7 +6,6 @@ from PIL import Image, ImageTk
 import hashlib
 import json
 import os
-
 class App:
     def __init__(self, root):
         self.root = root
@@ -17,7 +16,6 @@ class App:
         ctk.set_default_color_theme("green") 
         self.username = None
         self.email = None
-
         self.set_background()
         self.create_main_menu()
 
@@ -155,7 +153,6 @@ class App:
 
         ctk.CTkButton(self.root, text="Encrypt", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.show_encryption_page, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
         ctk.CTkButton(self.root, text="Decrypt", width=300, height=60, font=("Berlin Sans FB Demi", 18), command=self.show_decryption_page, fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
-        ctk.CTkButton(self.root, text="Secret Message", width=300, height=60, font=("Berlin Sans FB Demi", 18), fg_color="#4F6D4F", hover_color="#556B2F").pack(pady=20)
         self.create_back_button()
 
     def show_encryption_page(self):
@@ -172,16 +169,19 @@ class App:
 
         def encrypt_action():
             message = message_entry.get()
-            try:
-                # Create an instance of the Encryption class
-                encryption_instance = encrypt.Encryption(self.username)
-                encrypted_message = encryption_instance.encrypt_message(message)
-                if encrypted_message:
-                    self.encrypt_content_box(encrypted_message)
-                else:
-                    messagebox.showerror("Error", "Encryption failed!")
-            except Exception as e:
-                messagebox.showerror("Error", f"Error encrypting message: {e}")
+            if not message.strip():
+                messagebox.showerror("Error", "Message cannot be empty.")
+            else:
+                try:
+                    # Create an instance of the Encryption class
+                    encryption_instance = encrypt.Encryption(self.username)
+                    encrypted_message = encryption_instance.encrypt_message(message)
+                    if encrypted_message:
+                        self.encrypt_content_box(encrypted_message)
+                    else:
+                        messagebox.showerror("Error", "Encryption failed!")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Error encrypting message: {e}")
 
 
         # Button for message encryption
@@ -248,7 +248,7 @@ class App:
 
         # Add file selection and decryption button
         def decrypt_file_action():
-            file_path = filedialog.askopenfilename(title="Select File to Decrypt", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*")])
+            file_path = filedialog.askopenfilename(title="Select File to Decrypt", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*"), ("Text Files", "*.txt*"),("Files Json", "*.json*") ])
             if file_path:
                 try:
                     print(f"Selected file path: {file_path}")  # Debugging line
@@ -405,9 +405,14 @@ class App:
         encrypted_box.configure(state="disabled")  # Make it read-only
 
         def save_as_action():
-            save_path = filedialog.asksaveasfilename(defaultextension=".enc", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*")], title="Save Decrypted File")
-            if save_path:  # Only save if the user selected a path
-                messagebox.showinfo("File Saved", f"File saved as: {save_path}")
+            save_path = filedialog.asksaveasfilename(defaultextension=".enc", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*"), ("Text Files", "*.txt"), ("Files Json", "*.json")], title="Save File")
+            if save_path: 
+                try:
+                    with open(save_path, 'w') as file:
+                        file.write(encrypt_content)  # Save the encrypted content
+                    messagebox.showinfo("File Saved", f"File saved as: {save_path}")
+                except Exception as e:
+                    messagebox.showerror("Error", f"An error occurred: {e}")
 
         ctk.CTkButton(self.encrypted_frame, text="Save As", width=300, height=40, font=("Berlin Sans FB Demi", 14), fg_color="#4F6D4F", hover_color="#556B2F", command=save_as_action).pack(pady=10)
 
@@ -431,9 +436,13 @@ class App:
 
 
         def save_as_action():
-            save_path = filedialog.asksaveasfilename(defaultextension=".enc", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*")], title="Save Decrypted File")
-            if save_path:  # Only save if the user selected a path
+            save_path = filedialog.asksaveasfilename(defaultextension=".enc", filetypes=[("Encrypted Files", "*.enc"), ("All Files", "*.*"), ("Text Files", "*.txt"), ("Files Json", "*.json")], title="Save File")
+            try:
+                with open(save_path, 'w') as file:
+                    file.write(decrypt_content)  # Save the encrypted content
                 messagebox.showinfo("File Saved", f"File saved as: {save_path}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {e}")
 
         ctk.CTkButton(self.decrypted_frame, text="Save As", width=300, height=40, font=("Berlin Sans FB Demi", 14), fg_color="#4F6D4F", hover_color="#556B2F", command=save_as_action).pack(pady=10)
 
