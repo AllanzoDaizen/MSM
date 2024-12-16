@@ -1,5 +1,3 @@
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
 from base64 import b64decode, b64encode
 from Code import encrypt, decrypt, usr_authen, key_generate, create_folder, secret_user
 import getpass
@@ -109,16 +107,22 @@ def main(choices):
                                         elif thirdChoice == 1:
                                             file_encrypt = encrypt.Encryption(username)
                                             input_file = input("Enter a file path: ")
-                                            output_file = input("Enter a path to save: ")
-                                            file_encrypt.encrypt_file(input_file, output_file) 
-                                            print(f"File {input_file} encrypted successfully and saved to {output_file}!")
+                                            if not input_file.strip():
+                                                print("Path of file cannot be empty!")
+                                            else:
+                                                output_file = input("Enter a path to save: ")
+                                                file_encrypt.encrypt_file(input_file, output_file) 
+                                                print(f"File {input_file} encrypted successfully and saved to {output_file}!")
 
                                         elif thirdChoice == 2:
                                             file_decrypt = decrypt.Decryption(username)
                                             input_file = input("Enter a file path: ")
-                                            output_file = input("Enter a path to save: ")
-                                            file_decrypt.decrypt_file(input_file, output_file) 
-                                            print(f"File {input_file} decrypted successfully and saved to {output_file}!")
+                                            if not input_file.strip():
+                                                print("Path of file cannot be empty!")
+                                            else:
+                                                output_file = input("Enter a path to save: ")
+                                                file_decrypt.decrypt_file(input_file, output_file) 
+                                                print(f"File {input_file} decrypted successfully and saved to {output_file}!")
                                         else:
                                             print("Please enter a number (1-3).")
                                     except ValueError:
