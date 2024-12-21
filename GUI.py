@@ -74,11 +74,14 @@ class App:
 
         def create_account_action():
             username = username_entry.get()
-            if len(username) < 2:
-                i_label.configure(text="Username must be at least 2 characters long!", text_color="red")
+            if len(username) < 3:
+                i_label.configure(text="Username must be at least 3 characters long!", text_color="red")	
                 return
             else:
                 email = email_entry.get()
+                if email == "":  # Check if email is empty
+                    i_label.configure(text="Email cannot be empty!", text_color="red")
+                    return
                 password = password_entry.get()
                 if len(password) < 8:
                     messagebox.showerror("Error", "Password must be at least 8 characters long!")

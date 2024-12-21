@@ -12,11 +12,14 @@ def main(choices):
             print("-"*36)
 
             username = input("Username\t : ")
-            if len(username) < 2:
+            if len(username) < 3:
                 print("Username must be at least 2 characters long.")
                 continue
             else:
                 email = input("Email\t\t : ")
+                if email.strip() == "":
+                    print("Email cannot be empty.")
+                    continue
                 usr_pass = getpass.getpass("Password\t : ")
                 if len(usr_pass) < 8:
                     print("Password must be at least 8 characters long.")
