@@ -69,35 +69,54 @@ class App:
         confirm_password_entry = ctk.CTkEntry(self.root, font=("Arial", 18), show="*",placeholder_text="  Confirm Password", width=300, height=50)
         confirm_password_entry.pack(pady=15)
 
+        i_label = ctk.CTkLabel(self.root, text=f"", font=("Arial", 18), text_color="white")
+        i_label.pack(pady=10)
+
         def create_account_action():
             username = username_entry.get()
-            email = email_entry.get()
-            password = password_entry.get()
-            confirm_password = confirm_password_entry.get()
-
-            if password != confirm_password:
-                messagebox.showerror("Error", "Passwords do not match!")
+            if len(username) < 2:
+                i_label.configure(text="Username must be at least 2 characters long!", text_color="red")
                 return
-
-            authen = usr_authen.Usr_Create(username, password, email)
-            if authen.usr_pass() == False:
-                messagebox.showerror("Error", "Username already exists!")
             else:
-                CreateFd = create_folder.Create_folder(username)
-                CreateFd.create_folder()
+                email = email_entry.get()
+                password = password_entry.get()
+                if len(password) < 8:
+                    messagebox.showerror("Error", "Password must be at least 8 characters long!")
+                    i_label.configure(text="Password must be at least 8 characters long!", text_color="red")
+                    return
+                else:
+                    if not (any(char.isdigit() for char in password) and
+                                any(char.isupper() for char in password) and
+                                any(char.islower() for char in password) and
+                                any(char in "!@#$%^&*()_+" for char in password)):
+                        i_label.configure(text="Password must contain at least one uppercase, one lowercase, one digit and one special character!", text_color="red")
+                        return
+                    confirm_password = confirm_password_entry.get()
 
-                # Save email to usr_email.json
-                if not os.path.exists("./Files/usr_email.json"):
-                    with open("./Files/usr_email.json", "w") as f:
-                        json.dump({}, f)
+                    if password != confirm_password:
+                        i_label.configure(text="Passwords do not match!", text_color="red")
+                        return
 
-                KeyGenerate = key_generate.RSAkey(username)
-                KeyGenerate.generate_key()
-                KeyGenerate.save_key()
+                    authen = usr_authen.Usr_Create(username, password, email)
+                    if authen.usr_pass() == False:
+                        i_label.configure(text="Username already exists!", text_color="red")
+                    else:
+                        CreateFd = create_folder.Create_folder(username)
+                        CreateFd.create_folder()
 
-                messagebox.showinfo("Success", "Account created successfully!")
-                self.clear_screen()
-                self.create_main_menu()  # After account creation, go back to main menu
+                        # Save email to usr_email.json
+                        if not os.path.exists("./Files/usr_email.json"):
+                            with open("./Files/usr_email.json", "w") as f:
+                                json.dump({}, f)
+
+                        KeyGenerate = key_generate.RSAkey(username)
+                        KeyGenerate.generate_key()
+                        KeyGenerate.save_key()
+
+                        messagebox.showinfo("Success", "Account created successfully!")
+                        i_label.configure(text="Account created successfully!", text_color="green")
+                        self.clear_screen()
+                        self.create_main_menu()  # After account creation, go back to main menu
 
         ctk.CTkButton(self.root, text="Create Account", font=("Berlin Sans FB Demi", 18), command=create_account_action, fg_color="#4F6D4F", hover_color="#556B2F", width=150, height=50).pack(pady=20)
 
@@ -139,7 +158,7 @@ class App:
                 self.i_label.configure(text=f"{self.login_attempts} attempts left!")
                 if self.login_attempts == 0:
                     messagebox.showerror("Error", "No attempts left! Access denied.")
-                    self.i_label.configure(text="Access denied!")
+                    self.i_label.configure(text="No attempts left! Access denied!", text_color="red")
                     self.go_back()
 
         ctk.CTkButton(self.root, text="Login", font=("Berlin Sans FB Demi", 18), command=login_action, width=150, height=50).pack(pady=20)

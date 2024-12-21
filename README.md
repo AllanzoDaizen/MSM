@@ -42,6 +42,7 @@ This tool leverages RSA encryption to ensure data security. This tool supports b
 ---
 
 - **Required Libraries:**
+  - `cryptography`
   - `pycryptodome`
   - `json`
   - `hashlib`
@@ -49,6 +50,9 @@ This tool leverages RSA encryption to ensure data security. This tool supports b
   - `PIL`
   
 - **Install the dependencies using:**
+```bash
+pip install cryptography
+```
 ```bash
 pip install pycryptodome
 ```

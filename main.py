@@ -12,26 +12,40 @@ def main(choices):
             print("-"*36)
 
             username = input("Username\t : ")
-            email = input("Email\t\t : ")
-            usr_pass = getpass.getpass("Password\t : ")
-            usr_verifypass = getpass.getpass("Confirm password : ")
-
-            if usr_pass == usr_verifypass:
-                authen = usr_authen.Usr_Create(username, usr_pass, email)
-                if authen.usr_pass() == False:
-                    print("Try Again!\n")
-                    continue  
-                else:
-                    CreateFd = create_folder.Create_folder(username)
-                    CreateFd.create_folder()
-                    KeyGenerate = key_generate.RSAkey(username)
-                    KeyGenerate.generate_key()
-                    KeyGenerate.save_key()
-                    print("Account created successfully!")
-                    break  
-            else:
-                print("Passwords do not match. Please try again.\n")
+            if len(username) < 2:
+                print("Username must be at least 2 characters long.")
                 continue
+            else:
+                email = input("Email\t\t : ")
+                usr_pass = getpass.getpass("Password\t : ")
+                if len(usr_pass) < 8:
+                    print("Password must be at least 8 characters long.")
+                    continue
+                else:
+                    if not (any(char.isdigit() for char in usr_pass) and
+                            any(char.isupper() for char in usr_pass) and
+                            any(char.islower() for char in usr_pass) and
+                            any(char in "!@#$%^&*()_+" for char in usr_pass)):
+                        print("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+                        continue
+                    else:
+                        usr_verifypass = getpass.getpass("Confirm password : ")
+                        if usr_pass == usr_verifypass:
+                            authen = usr_authen.Usr_Create(username, usr_pass, email)
+                            if authen.usr_pass() == False:
+                                print("Try Again!\n")
+                                continue  
+                            else:
+                                CreateFd = create_folder.Create_folder(username)
+                                CreateFd.create_folder()
+                                KeyGenerate = key_generate.RSAkey(username)
+                                KeyGenerate.generate_key()
+                                KeyGenerate.save_key()
+                                print("Account created successfully!")
+                                break  
+                        else:
+                            print("Passwords do not match. Please try again.\n")
+                            continue
     
     elif choices == 2:
         i = 3
